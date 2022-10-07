@@ -5,7 +5,6 @@ const router = express.Router();
 
 // retrieve all user data from the DB
 const find = (req, res) => {
-    console.log('here')
     Schema.find()
     .then((data) => {
         return res.status(200).send(data);
@@ -40,31 +39,22 @@ const findOneAndUpdate = (req, res) => {
     console.log(req.body);
     Schema.findById({_id:req.params.id})
     .then((currentData) => {
-        let {newName, newEmail, newPassword, newGender, newRole, newUpdatedScreeningResult} = '';
+        let {newName, newEmail, newPassword } = '';
         if (!req.body.name) { newName = currentData.name}
         if (!req.body.email) { newEmail = currentData.email}
         if (!req.body.password) { newPassword = currentData.password}
-        if (!req.body.role) { newRole = currentData.role}
-        if (!req.body.updatedScreeningResult) { newUpdatedScreeningResult = currentData.updatedScreeningResult}
         if (req.body.name) { newName = req.body.name}
         if (req.body.email) { newEmail = req.body.email}
         if (req.body.password) { newPassword = req.body.password}
-        if (req.body.role) { newRole = req.body.role}
-        if (req.body.updatedScreeningResult) { newUpdatedScreeningResult = req.body.updatedScreeningResult}
         const newData = Schema({
             name: newName,
             email: newEmail,
             password: newPassword,
-            gender: newGender,
-            role: newRole,
-            updatedScreeningResult: newUpdatedScreeningResult,
             _id: req.params.id
         });
-        console.log(newData)
         // update with new data
         Schema.findByIdAndUpdate( {_id: req.params.id}, newData, { new: true } )
         .then((updatedData) => {
-            console.log('success update data');
             return res.status(200).send(updatedData);
         }).catch((err) => {
             if(err.kind === 'Object_id') {
@@ -86,7 +76,6 @@ const findByIdAndRemove = (req, res) => {
     Schema.findByIdAndRemove({_id: req.params.id})
     .then((data) => {
         if(!data) { return res.status(404).send({ message: 'data not found with id ' + req.params.id, }); }
-        console.log('data deleted successfully!');
         return res.status(200).send({ message: 'data deleted successfully!' });
     })
     .catch((err) => {

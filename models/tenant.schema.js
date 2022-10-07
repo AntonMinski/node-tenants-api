@@ -4,22 +4,22 @@ module.exports = mongoose.model(
     "Tenant",
     new mongoose.Schema(
         {
-            name : {
+            name: {
                 type: String,
                 unique: true,
-                required:true,
+                required: true,
             },
-            phoneNumber : {
+            phoneNumber: {
                 type: String,
                 unique: true,
                 trim: true,
                 required: true,
             },
-            address : {
+            address: {
                 type: String,
                 default: '',
             },
-            financialDebt : {
+            financialDebt: {
                 type: Number,
                 default: 0,
             }

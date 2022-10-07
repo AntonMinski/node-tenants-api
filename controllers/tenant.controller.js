@@ -1,10 +1,10 @@
 const Schema = require('../models/tenant.schema');
 const express = require('express');
 const router = express.Router();
+const getQueryObject = require('../services/getQueryObject.service')
 
 // Create and Save a new Tenant
 const create = (req, res) => {
-    console.log(req.body);
 
     // Validate request
     if (!req.body.name) {
@@ -36,11 +36,14 @@ const create = (req, res) => {
 
 // Retrieve all Tenants from the database.
 const findAll = (req, res) => {
-    Schema.find()
+    const queryObj = getQueryObject(req.query);
+
+    Schema.find(queryObj)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
+            console.log(err);
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while retrieving tenants."
@@ -131,34 +134,6 @@ const deleteAll = (req, res) => {
         });
 };
 
-// Find all Tenants with debts
-const findAllDebts = (req, res) => {
-    Schema.find({ financialDebt: { $gt: 0 } })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving tenants."
-            });
-        });
-};
-
-// Find all Tenants that do not have any debt.
-const findNoDebts = (req, res) => {
-    Schema.find({ financialDebt: 0 })
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving tenants."
-            });
-        });
-};
-
 // Create a new Tenant
 router.post("/", create);
 
@@ -173,12 +148,6 @@ router.delete("/:id", deleteOne);
 
 // Delete all Tenants
 router.delete("/", deleteAll);
-
-// Retrieve Tenants with debts
-router.get("/debts", findAllDebts);
-
-// Tenants with no debts
-router.get("/no-debts", findNoDebts);
 
 // Retrieve a single Tenant with id
 router.get("/:id", findOne);

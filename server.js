@@ -18,13 +18,20 @@ app.use(bodyParser.json());
 // db connection
 require('./config/mongodb.config').sync;
 
+// logger
+const useMorganLogger = require('./services/logging.service');
+useMorganLogger(app);
+
+// middleware
+const authMiddleware = require('./middleware/auth.middleware');
+
 // router
 const authRoutes = require('./controllers/auth.controller');
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authMiddleware, authRoutes);
 const tenantRotes = require('./controllers/tenant.controller');
-app.use('/api/tenant', tenantRotes);
-const userRotes = require('./controllers/tenant.controller');
-app.use('/api/users', userRotes);
+app.use('/api/tenants', authMiddleware, tenantRotes);
+const userRotes = require('./controllers/user.controller');
+app.use('/api/users', authMiddleware, userRotes);
 
 // server 
 const port = process.env.PORT || 3000;
