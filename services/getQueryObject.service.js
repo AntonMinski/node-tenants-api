@@ -1,13 +1,20 @@
 const getMongooseQuery = (query) => {
-const mongooseQuery = {};
+    // const queryFieldsArray = []
+    const mongooseQuery = {}
     if (query) {
-        if (query.name) {
-            mongooseQuery.name = query.name;
+        if (query.search) {
+            mongooseQuery['$or'] = [
+                {name: {$regex: query.search, $options: 'i'}},
+                {phone: {$regex: query.search, $options: 'i'}},
+                {address: {$regex: query.search, $options: 'i'}},
+            ];
         }
-        if (query.debt === 'true') {
-            mongooseQuery.financialDebt = { $gt: 0 };
-        } else if (query.debt === 'false') {
-            mongooseQuery.financialDebt = 0;
+        switch (query.debt) {
+            case 'debt':
+                mongooseQuery.debt = { $gt: 0 };
+                break
+            case 'clear':
+                mongooseQuery.debt = { $lte: 0 };
         }
     }
     return mongooseQuery;
