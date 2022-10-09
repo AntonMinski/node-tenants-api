@@ -9,7 +9,7 @@ module.exports = mongoose.model(
                 unique: true,
                 required: true,
             },
-            phoneNumber: {
+            phone: {
                 type: String,
                 unique: true,
                 trim: true,
@@ -19,7 +19,7 @@ module.exports = mongoose.model(
                 type: String,
                 default: '',
             },
-            financialDebt: {
+            debt: {
                 type: Number,
                 default: 0,
             }

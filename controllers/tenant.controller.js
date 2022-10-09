@@ -15,9 +15,9 @@ const create = (req, res) => {
     // Create a Tenant
     const tenant = new Schema({
         name: req.body.name,
-        phoneNumber: req.body.phoneNumber,
+        phone: req.body.phone,
         address: req.body.address,
-        financialDebt: req.body.financialDebt
+        debt: req.body.debt
     });
 
     // Save Tenant in the database
